@@ -1,5 +1,6 @@
 package com.nikita.inventorymanagement.service;
 
+import com.nikita.inventorymanagement.dto.ProductRequestDto;
 import com.nikita.inventorymanagement.model.Product;
 import com.nikita.inventorymanagement.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,21 @@ public class ProductService {
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    public ProductRequestDto addProduct(ProductRequestDto productDTO) {
+        Product product = new Product();
+        product.setName(productDTO.getName());
+        product.setQuantity(productDTO.getQuantity());
+
+        // 2. Save to DB
+        Product savedProduct = productRepository.save(product);
+
+        // 3. Convert Entity → DTO (optional, to return saved details)
+        ProductRequestDto responseDTO = new ProductRequestDto();
+        responseDTO.setName(savedProduct.getName());
+        responseDTO.setQuantity(savedProduct.getQuantity());
+
+        return responseDTO;
     }
 }
